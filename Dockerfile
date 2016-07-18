@@ -2,7 +2,8 @@ FROM debian:jessie
 
 MAINTAINER xazrad
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update \ 
+    && apt-get install -y \
     build-essential \
     nginx \
     python2.7 \
@@ -11,11 +12,13 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libpcre3 \
     libpcre3-dev \
-    supervisor
+    supervisor \
+    && pip install uwsgi \
+    && echo "daemon off;" >> /etc/nginx/nginx.conf \ 
+    && chown -R www-data:www-data /var/lib/nginx \ 
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
-RUN pip install uwsgi
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-RUN chown -R www-data:www-data /var/lib/nginx
+
 EXPOSE 80
 
 WORKDIR /etc/nginx
